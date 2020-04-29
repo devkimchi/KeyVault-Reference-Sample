@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+
+    "Hello": "@Microsoft.KeyVault(SecretUri=https://<keyvault-name>.vault.azure.net/secrets/hello/<secret-version>)",
+    "Hello2": "@Microsoft.KeyVault(VaultName=<keyvault-name>; SecretName=hello2; SecretVersion=<secret-version>)",
+    "Lorem": "@Microsoft.KeyVault(SecretUri=https://<keyvault-name>.vault.azure.net/secrets/lorem/)",
+    "Lorem2": "Ipsum"
+  }
+}
