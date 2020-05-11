@@ -5,7 +5,10 @@ This provides sample codes to get secrets from Azure Key Vault by reference, eve
 
 ## Readings ##
 
-TBD
+* 한국어
+  * [애저 펑션에서 애저 키 저장소 값을 참조하는 세 가지 방법](https://blog.aliencube.org/ko/2020/04/30/3-ways-referencing-azure-key-vault-from-azure-functions/)
+* English
+  * [3 Ways Referencing Azure Key Vault from Azure Functions](https://devkimchi.com/2020/04/30/3-ways-referencing-azure-key-vault-from-azure-functions/)
 
 
 ## Contribution ##
