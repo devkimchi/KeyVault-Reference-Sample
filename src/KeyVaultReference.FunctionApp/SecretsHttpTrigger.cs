@@ -40,45 +40,45 @@ namespace KeyVaultReference.FunctionApp
             };
             var client = new SecretClient(new Uri(uri), new DefaultAzureCredential(options));
 
-            // Get the properties of all secrets
-            var properties = await client.GetPropertiesOfSecretsAsync()
-                                         .ToListAsync()
-                                         .ConfigureAwait(false);
+            // Get the all secrets
+            var secrets = await client.GetPropertiesOfSecretsAsync()
+                                      .ToListAsync()
+                                      .ConfigureAwait(false);
 
             var utcNow = DateTimeOffset.UtcNow;
             var results = new Dictionary<string, object>();
-            foreach (var property in properties)
+            foreach (var secret in secrets)
             {
                 // Get the all versions of the given secret
                 // Filter only enabled versions
                 // Sort by the created date in a reverse order
-                var secrets = await client.GetPropertiesOfSecretVersionsAsync(property.Name)
-                                          .WhereAwait(p => new ValueTask<bool>(p.Enabled.GetValueOrDefault() == true))
-                                          .OrderByDescendingAwait(p => new ValueTask<DateTimeOffset>(p.CreatedOn.GetValueOrDefault()))
-                                          .ToListAsync()
-                                          .ConfigureAwait(false);
+                var versions = await client.GetPropertiesOfSecretVersionsAsync(secret.Name)
+                                           .WhereAwait(p => new ValueTask<bool>(p.Enabled.GetValueOrDefault() == true))
+                                           .OrderByDescendingAwait(p => new ValueTask<DateTimeOffset>(p.CreatedOn.GetValueOrDefault()))
+                                           .ToListAsync()
+                                           .ConfigureAwait(false);
 
                 // Do nothing if there is no version enabled
-                if (!secrets.Any())
+                if (!versions.Any())
                 {
                     continue;
                 }
 
                 // Do nothing if there is only one version enabled
-                if (secrets.Count < 2)
+                if (versions.Count < 2)
                 {
                     continue;
                 }
 
                 // Do nothing if the latest version was generated less than a day ago
-                if (secrets.First().CreatedOn.GetValueOrDefault() <= utcNow.AddDays(-1))
+                if (versions.First().CreatedOn.GetValueOrDefault() <= utcNow.AddDays(-1))
                 {
                     continue;
                 }
 
                 // Disable all versions except the first (latest) one
-                var candidates = secrets.Skip(1).ToList();
-                var result = new List<SecretProperties>() { secrets.First() };
+                var candidates = versions.Skip(1).ToList();
+                var result = new List<SecretProperties>() { versions.First() };
                 foreach (var candidate in candidates)
                 {
                     candidate.Enabled = false;
@@ -87,7 +87,7 @@ namespace KeyVaultReference.FunctionApp
                     result.Add(response.Value);
                 }
 
-                results.Add(property.Name, result);
+                results.Add(secret.Name, result);
             }
 
             var res = new ContentResult()
