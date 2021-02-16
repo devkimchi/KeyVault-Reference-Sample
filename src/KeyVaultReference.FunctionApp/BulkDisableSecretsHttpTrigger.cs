@@ -16,11 +16,11 @@ using Newtonsoft.Json;
 
 namespace KeyVaultReference.FunctionApp
 {
-    public static class SecretsHttpTrigger
+    public static class BulkDisableSecretsHttpTrigger
     {
-        [FunctionName("SecretsHttpTrigger")]
+        [FunctionName("BulkDisableSecretsHttpTrigger")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "secrets/disable")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "secrets/all/disable")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
