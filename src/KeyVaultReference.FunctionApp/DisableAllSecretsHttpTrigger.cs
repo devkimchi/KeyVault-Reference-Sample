@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Azure.Identity;
@@ -16,9 +17,9 @@ using Newtonsoft.Json;
 
 namespace KeyVaultReference.FunctionApp
 {
-    public static class BulkDisableSecretsHttpTrigger
+    public static class DisableAllSecretsHttpTrigger
     {
-        [FunctionName("BulkDisableSecretsHttpTrigger")]
+        [FunctionName("DisableAllSecretsHttpTrigger")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "secrets/all/disable")] HttpRequest req,
             ILogger log)
@@ -94,6 +95,7 @@ namespace KeyVaultReference.FunctionApp
             {
                 Content = JsonConvert.SerializeObject(results, Formatting.Indented),
                 ContentType = "application/json",
+                StatusCode = (int)HttpStatusCode.OK,
             };
 
             return res;
